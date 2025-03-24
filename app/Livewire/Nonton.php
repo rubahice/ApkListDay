@@ -14,7 +14,7 @@ class Nonton extends Component
     public $detailNonton;
     public $Kategori = 'anime';
     public $Menu = 'lihat';
-    public $kategori;
+    public $formkategori;
     public $title;
     public $genre;
     public $deskripsi;
@@ -38,25 +38,25 @@ class Nonton extends Component
 
     public function simpan() {
         $this->validate([
-            'kategori' => 'required|in:anime,donghua',
+            'formkategori' => 'required|in:anime,donghua',
             'title' => 'required|string|max:255',
             'genre' => 'required|string',
             'deskripsi' => 'required|string',
             'episode' => 'required|integer|min:1',
             'status' => 'required|in:watching,completed,dropped,on-hold,plan-to-watch',
-            'tahun_rilis' => ['required', 'date_format:d-m-Y'],
+            'tahun_rilis' => 'required|integer|min:1900|max:' . date('Y'),
             'studio' => 'required|string|max:255',
             'rating' => 'nullable|numeric|min:1|max:10',
         ]);
 
         $namagambar = null;
         if ($this->gambar) {
-            $folder = $this->kategori === 'anime' ? 'img/anime' : 'img/donghua';
+            $folder = $this->formkategori === 'anime' ? 'img/anime' : 'img/donghua';
             $namagambar = $this->gambar->store($folder, 'public');
         }
 
-        $simpan = $this->kategori === 'anime' ? new Anime() : new Donghua();
-        $simpan->kategori = $this->kategori;
+        $simpan = $this->formkategori === 'anime' ? new Anime() : new Donghua();
+        $simpan->kategori = $this->formkategori;
         $simpan->title = $this->title;
         $simpan->genre = $this->genre;
         $simpan->deskripsi = $this->deskripsi;

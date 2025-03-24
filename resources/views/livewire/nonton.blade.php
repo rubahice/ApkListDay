@@ -142,15 +142,22 @@
                             style="display: {{ $Menu === 'tambah' ? 'flex.' : 'none' }};">
                             <!-- Bagian Data -->
                             <div class="md:w-full md:pl-6">
+
                                 <form wire:submit.prevent="simpan">
+
+
                                     <div class="mb-4">
                                         <label for="kategori"
                                             class="block text-sm font-medium text-gray-700 dark:text-white">Kategori</label>
-                                        <select wire:model="kategori" id="kategori" name="kategori"
+                                        <select wire:model="formkategori" id="kategori" name="kategori"
                                             class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
                                             <option value="anime">Anime</option>
                                             <option value="donghua">Donghua</option>
                                         </select>
+                                        @error('formkategori')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -159,6 +166,9 @@
                                         <input wire:model="title" type="text" id="judul" name="judul"
                                             class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                             placeholder="Masukkan judul anime">
+                                        @error('title')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -167,6 +177,9 @@
                                         <input wire:model="genre" type="text" id="genre" name="genre"
                                             class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                             placeholder="Contoh: Aksi, Petualangan">
+                                        @error('genre')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -175,6 +188,9 @@
                                         <textarea wire:model="deskripsi" id="deskripsi" name="deskripsi" rows="3"
                                             class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                             placeholder="Ceritakan tentang anime ini"></textarea>
+                                        @error('deskripsi')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -183,6 +199,9 @@
                                         <input wire:model="episode" type="number" id="episode" name="episode"
                                             class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                             placeholder="Jumlah episode">
+                                        @error('episode')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -196,6 +215,9 @@
                                             <option value="on-hold">On-Hold</option>
                                             <option value="plan-to-watch">Plan-to-Watch</option>
                                         </select>
+                                        @error('status')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -206,6 +228,9 @@
                                             name="tahun_rilis"
                                             class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                             placeholder="Masukkan tahun rilis">
+                                        @error('tahun_rilis')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -214,6 +239,9 @@
                                         <input wire:model="studio" type="text" id="studio" name="studio"
                                             class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                             placeholder="Nama studio animasi">
+                                        @error('studio')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -222,6 +250,9 @@
                                         <input wire:model="rating" type="number" id="rating" name="rating"
                                             class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                             placeholder="Nama studio animasi">
+                                        @error('rating')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
                                     <div class="mb-4">
@@ -230,6 +261,9 @@
                                             Gambar</label>
                                         <input wire:model="gambar" type="file" id="gambar" name="gambar"
                                             class="mt-1 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                        @error('gambar')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div class="mt-4">
                                     <button type="submit"
@@ -242,6 +276,24 @@
                     @endif
                 </div>
             @elseif ($Kategori == 'donghua')
+                @foreach ($donghuas as $donghua)
+
+                    <div class="relative group overflow-hidden rounded-lg shadow-lg cursor-pointer">
+                        <img src="{{ asset('storage/'.$donghua->gambar) }}"
+                            alt="Donghua" class="w-full h-auto transition-transform duration-300 group-hover:scale-105">
+                        <div class="absolute top-2 left-2 bg-gray-900 text-white text-xs px-2 py-1 rounded">
+                            {{ ucfirst($donghua->kategori) }}</div>
+                        <div class="absolute bottom-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+                            {{ $donghua->episode }}</div>
+                        <div class="absolute bottom-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded">
+                            ★{{ $donghua->rating }}</div>
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-lg font-bold transition-opacity duration-300">
+                            {{ $donghua->title }}
+                        </div>
+                    </div>
+
+                @endforeach
             <div>
                 <div class="text-gray-900 dark:text-gray-100">
                     <button wire:click="lihatMenu('tambah')"
