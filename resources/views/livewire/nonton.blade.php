@@ -415,7 +415,7 @@
                                 <div class="mb-4">
                                     <label for="kategori"
                                         class="block text-sm font-medium text-gray-700 dark:text-white">Kategori</label>
-                                    <select wire:model="kategori" id="kategori" name="kategori"
+                                    <select wire:model="formkategori" id="kategori" name="kategori"
                                         class="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
                                         <option value="anime">Anime</option>
                                         <option value="donghua">Donghua</option>
