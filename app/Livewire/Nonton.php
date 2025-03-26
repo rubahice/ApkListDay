@@ -98,7 +98,16 @@ class Nonton extends Component
     public $detailNonton;
     public $Kategori = 'anime';
     public $Menu = 'lihat';
-    public $title, $genre, $deskripsi, $episode, $status, $tahun_rilis, $studio, $rating, $gambar;
+    public $formkategori;
+    public $title;
+    public $genre;
+    public $deskripsi;
+    public $episode;
+    public $status;
+    public $tahun_rilis;
+    public $studio;
+    public $rating;
+    public $gambar;
 
     public function tampilkanDetail($id, $kategori)
     {
@@ -111,12 +120,13 @@ class Nonton extends Component
 
     public function simpan() {
         $this->validate([
+            'formkategori' => 'required|in:anime,donghua',
             'title' => 'required|string|max:255',
             'genre' => 'required|string',
             'deskripsi' => 'required|string',
             'episode' => 'required|integer|min:1',
             'status' => 'required|in:watching,completed,dropped,on-hold,plan-to-watch',
-            'tahun_rilis' => 'required|date_format:Y-m-d', // Pastikan sesuai format
+            'tahun_rilis' => 'required|integer|min:1900|max:' . date('Y'),
             'studio' => 'required|string|max:255',
             'rating' => 'nullable|numeric|min:1|max:10',
             'gambar' => 'nullable|image|max:2048', // Pastikan file adalah gambar dan ukurannya tidak terlalu besar
@@ -125,23 +135,24 @@ class Nonton extends Component
         // Proses Upload Gambar (jika ada)
         $namagambar = null;
         if ($this->gambar) {
-            $folder = $this->Kategori === 'anime' ? 'img/anime' : 'img/donghua';
-            $namagambar = $this->gambar->storeAs($folder, time() . '.' . $this->gambar->extension(), 'public');
+            $folder = $this->formkategori === 'anime' ? 'img/anime' : 'img/donghua';
+            $namagambar = $this->gambar->store($folder, 'public');
         }
 
-        // Simpan ke Model yang Sesuai
-        $modelClass = $this->Kategori === 'anime' ? Anime::class : Donghua::class;
-        $modelClass::create([
-            'title' => $this->title,
-            'genre' => $this->genre,
-            'deskripsi' => $this->deskripsi,
-            'episode' => $this->episode,
-            'status' => $this->status,
-            'tahun_rilis' => $this->tahun_rilis, // Sudah dalam format Y-m-d
-            'studio' => $this->studio,
-            'rating' => $this->rating,
-            'gambar' => $namagambar,
-        ]);
+        $simpan = $this->formkategori === 'anime' ? new Anime() : new Donghua();
+        $simpan->kategori = $this->formkategori;
+        $simpan->title = $this->title;
+        $simpan->genre = $this->genre;
+        $simpan->deskripsi = $this->deskripsi;
+        $simpan->episode = $this->episode;
+        $simpan->status = $this->status;
+        $simpan->tahun_rilis = $this->tahun_rilis;
+        $simpan->studio = $this->studio;
+        $simpan->rating = $this->rating;
+        if(isset($this->gambar)){
+            $simpan->gambar = $namagambar;
+        }
+        $simpan->save();
 
         // Reset Input
         $this->reset(['title', 'genre', 'deskripsi', 'episode', 'status', 'tahun_rilis', 'studio', 'rating', 'gambar']);
